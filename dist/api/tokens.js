@@ -25,18 +25,22 @@ class TokensAPI extends base_1.BaseAPI {
      * @param limit - Number of items per page
      * @param sort - Sort order ("asc" or "desc")
      * @param orderBy - Field to order by ("volume_usd", "price_usd", "transactions", "last_price_change_usd_24h", "created_at")
-     * @param otherTokenAddress - Filter pools that contain this additional token address
+     * @param pairWith - Filter pools that contain this additional token address
      * @returns Response containing a list of pools that include the specified token
      */
-    async getPools(networkId, tokenAddress, page = 0, limit = 10, sort = 'desc', orderBy = 'volume_usd', otherTokenAddress) {
+    async getPools(networkId, tokenAddress, page = 0, limit = 10, sort = 'desc', orderBy = 'volume_usd', pairWith // optional pair token address
+    ) {
+        // build params
         const params = {
             page,
             limit,
             sort,
-            order_by: orderBy,
+            order_by: orderBy
         };
-        if (otherTokenAddress)
-            params.address = otherTokenAddress;
+        // add pair token if specified
+        if (pairWith)
+            params['address'] = pairWith;
+        // get pools filtered by token
         return this._get(`/networks/${networkId}/tokens/${tokenAddress}/pools`, params);
     }
 }

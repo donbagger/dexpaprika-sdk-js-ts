@@ -15,11 +15,7 @@ class DexesAPI extends base_1.BaseAPI {
      * @returns Paginated response containing a list of DEXes on the network
      */
     async listByNetwork(networkId, page = 0, limit = 10) {
-        const params = {
-            page,
-            limit,
-        };
-        return this._get(`/networks/${networkId}/dexes`, params);
+        return this._get(`/networks/${networkId}/dexes`, { page, limit });
     }
 }
 exports.DexesAPI = DexesAPI;

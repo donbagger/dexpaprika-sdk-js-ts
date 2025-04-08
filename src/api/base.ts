@@ -1,8 +1,6 @@
 import { DexPaprikaClient } from '../client';
 
-/**
- * Base class for all API services.
- */
+// base for api classes
 export class BaseAPI {
   protected client: DexPaprikaClient;
 

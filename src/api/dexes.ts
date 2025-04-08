@@ -15,14 +15,9 @@ export class DexesAPI extends BaseAPI {
    */
   async listByNetwork(
     networkId: string, 
-    page: number = 0, 
-    limit: number = 10
+    page = 0, 
+    limit = 10
   ): Promise<DexPaginatedResponse> {
-    const params: Record<string, any> = {
-      page,
-      limit,
-    };
-    
-    return this._get<DexPaginatedResponse>(`/networks/${networkId}/dexes`, params);
+    return this._get(`/networks/${networkId}/dexes`, { page, limit });
   }
 } 

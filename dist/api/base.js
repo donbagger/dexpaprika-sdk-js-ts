@@ -1,9 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.BaseAPI = void 0;
-/**
- * Base class for all API services.
- */
+// base for api classes
 class BaseAPI {
     /**
      * Initialize a new API service.
