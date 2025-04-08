@@ -1,6 +1,11 @@
 # DexPaprika SDK
 
-JavaScript/TypeScript client for the DexPaprika API. Access decentralized exchange data across multiple blockchain networks.
+[![npm version](https://img.shields.io/npm/v/dexpaprika-sdk.svg)](https://www.npmjs.com/package/dexpaprika-sdk)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+
+The official JavaScript client library for the [DexPaprika API](https://api.dexpaprika.com), providing easy access to decentralized exchange data across multiple blockchain networks.
+
+Developed and maintained by [Coinpaprika](https://coinpaprika.com).
 
 ## Installation
 
@@ -149,15 +154,14 @@ MIT
 
 ## Contributing
 
-Contributions are welcome. Please submit a pull request or create an issue to discuss proposed changes.
+Contributions are welcome! Please read our [contributing guidelines](https://github.com/coinpaprika/dexpaprika-sdk-js/blob/main/CONTRIBUTING.md) before submitting a Pull Request.
 
-## Known Issues
+## Support
 
-- Some endpoints may have limited availability during network congestion
-- TypeScript types may need updates for certain response formats
-- CORS limitations when used directly in browser environments (use a proxy server)
+For issues, questions, or feedback, please:
+- Open an issue on our [GitHub repository](https://github.com/coinpaprika/dexpaprika-sdk-js/issues)
+- Reach out to the DexPaprika team at [support@coinpaprika.com](mailto:support@coinpaprika.com)
 
-## Acknowledgements
+## Disclaimer
 
-- CoinPaprika team for the API
-- All contributors and testers 
+This SDK is created and maintained by Coinpaprika. While we strive to provide accurate and up-to-date data, we make no guarantees regarding the accuracy, reliability, or completeness of the data provided through the DexPaprika API.
