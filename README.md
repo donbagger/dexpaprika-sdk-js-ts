@@ -148,6 +148,13 @@ console.log(formatVolume(1234567));  // $1.23M
 console.log(formatPair('ETH', 'USDC')); // ETH/USDC
 ```
 
+## Resources
+
+- [Official Documentation](https://docs.dexpaprika.com) - Comprehensive API reference
+- [DexPaprika Website](https://dexpaprika.com) - Main product website
+- [CoinPaprika](https://coinpaprika.com) - Related cryptocurrency data platform
+- [Discord Community](https://discord.gg/DhJge5TUGM) - Get support and connect with other developers
+
 ## License
 
 MIT
