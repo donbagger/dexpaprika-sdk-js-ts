@@ -41,15 +41,49 @@ export interface TokenTimeIntervalMetrics {
     last_price_usd_change?: number;
 }
 export interface TokenSummary {
+    /**
+     * Current price of the token in USD
+     */
     price_usd: number;
+    /**
+     * Fully diluted valuation of token
+     */
     fdv?: number;
-    liquidity_usd?: number;
-    '24h'?: TokenTimeIntervalMetrics;
+    /**
+     * Total liquidity (in USD) across all pools for this token
+     */
+    liquidity_usd: number;
+    /**
+     * Total number of pools that include the given token
+     */
+    pools: number;
+    /**
+     * Metrics for the last 24 hours
+     */
+    '24h': TokenTimeIntervalMetrics;
+    /**
+     * Metrics for the last 6 hours (optional)
+     */
     '6h'?: TokenTimeIntervalMetrics;
+    /**
+     * Metrics for the last 1 hour (optional)
+     */
     '1h'?: TokenTimeIntervalMetrics;
+    /**
+     * Metrics for the last 30 minutes (optional)
+     */
     '30m'?: TokenTimeIntervalMetrics;
+    /**
+     * Metrics for the last 15 minutes (optional)
+     */
     '15m'?: TokenTimeIntervalMetrics;
+    /**
+     * Metrics for the last 5 minutes (optional)
+     */
     '5m'?: TokenTimeIntervalMetrics;
+    /**
+     * Metrics for the last 1 minute (optional)
+     */
     '1m'?: TokenTimeIntervalMetrics;
 }
 export interface TokenWithDetails extends Token {

@@ -1,4 +1,5 @@
 import { PaginatedResponse, PoolPaginatedResponse } from './base';
+import { TokenSummary } from './tokens';
 
 // basic token info
 export interface Token {
@@ -13,6 +14,8 @@ export interface Token {
   description?: string;
   website?: string;
   explorer?: string;
+  last_updated?: string; // When the token data was last updated
+  summary?: TokenSummary; // Added summary field from the updated OpenAPI spec
 }
 
 // pool data

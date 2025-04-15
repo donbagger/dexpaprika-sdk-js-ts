@@ -20,6 +20,10 @@ Thumbs.db
 # Test files
 coverage/
 
+#OpenAPI
+openapi_old.yml
+openapi_new.yml
+
 # Misc
 .env
 .env.local

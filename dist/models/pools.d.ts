@@ -1,4 +1,5 @@
 import { PaginatedResponse, PoolPaginatedResponse } from './base';
+import { TokenSummary } from './tokens';
 export interface Token {
     id: string;
     name: string;
@@ -11,6 +12,8 @@ export interface Token {
     description?: string;
     website?: string;
     explorer?: string;
+    last_updated?: string;
+    summary?: TokenSummary;
 }
 export interface Pool {
     id: string;
