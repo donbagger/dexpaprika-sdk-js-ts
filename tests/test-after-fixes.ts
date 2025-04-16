@@ -1,4 +1,4 @@
-import { DexPaprikaClient } from './src';
+import { DexPaprikaClient } from '../src';
 
 // Testing DexPaprika SDK
 async function main() {

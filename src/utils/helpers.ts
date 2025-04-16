@@ -50,3 +50,71 @@ export const lastWeek = () => now() - 86400 * 7;
 
 // Async delay utility
 export const sleep = (ms: number) => new Promise(r => setTimeout(r, ms)); 
+
+/**
+ * Configuration for retry mechanism
+ */
+export interface RetryConfig {
+  /** Maximum number of retry attempts */
+  maxRetries: number;
+  /** Specific delay times in milliseconds for each retry attempt */
+  delaySequenceMs: number[];
+  /** HTTP status codes that should trigger a retry */
+  retryableStatuses: number[];
+}
+
+/**
+ * Default retry configuration
+ */
+export const defaultRetryConfig: RetryConfig = {
+  maxRetries: 4,
+  delaySequenceMs: [100, 500, 1000, 5000],  // Explicit sequence as requested
+  retryableStatuses: [408, 429, 500, 502, 503, 504]
+};
+
+/**
+ * Execute an operation with retry and specified delays
+ * 
+ * @param operation - The async operation to execute
+ * @param config - Retry configuration
+ * @returns Result of the operation
+ * @throws Last error encountered if all retries fail
+ */
+export async function withRetry<T>(
+  operation: () => Promise<T>,
+  config: Partial<RetryConfig> = {}
+): Promise<T> {
+  const finalConfig = { ...defaultRetryConfig, ...config };
+  let lastError: Error;
+
+  // Try initial attempt plus retries
+  for (let attempt = 0; attempt <= finalConfig.maxRetries; attempt++) {
+    try {
+      // For attempts after the first one, wait using the specified delay
+      if (attempt > 0) {
+        const delayIndex = attempt - 1; // Adjust index to match delaySequence
+        const delay = finalConfig.delaySequenceMs[delayIndex] || 
+                    finalConfig.delaySequenceMs[finalConfig.delaySequenceMs.length - 1];
+        
+        await sleep(delay);
+      }
+      
+      return await operation();
+    } catch (error: any) {
+      lastError = error;
+      
+      // Only retry on specified status codes or network errors
+      if (error.response?.status && 
+          !finalConfig.retryableStatuses.includes(error.response.status)) {
+        throw error;
+      }
+      
+      // Don't continue if this was the last attempt
+      if (attempt === finalConfig.maxRetries) {
+        throw error;
+      }
+    }
+  }
+
+  throw lastError!;
+} 

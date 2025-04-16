@@ -1,4 +1,4 @@
-import { DexPaprikaClient } from './src';
+import { DexPaprikaClient } from '../src';
 
 /**
  * Test to verify the Token model updates with the new summary field

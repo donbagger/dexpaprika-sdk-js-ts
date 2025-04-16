@@ -8,8 +8,12 @@
     "build": "tsc",
     "clean": "rimraf dist",
     "prepublishOnly": "npm run clean && npm run build",
-    "test": "ts-node test-after-fixes.ts",
-    "example": "ts-node examples/basic-example.ts"
+    "test": "ts-node tests/test-after-fixes.ts",
+    "test:all": "npm test && npm run verify && npm run verify:real && ts-node tests/test-token-summary.ts",
+    "example": "ts-node examples/basic-example.ts",
+    "example:cache": "ts-node examples/retry-cache-example.ts",
+    "verify": "ts-node tests/test-retry-cache.ts",
+    "verify:real": "ts-node tests/test-real-world.ts"
   },
   "keywords": [
     "dexpaprika",
@@ -30,7 +34,7 @@
     "axios": "^1.8.4"
   },
   "devDependencies": {
-    "@types/node": "^22.14.0",
+    "@types/node": "^22.14.1",
     "date-fns": "^4.1.0",
     "rimraf": "^5.0.0",
     "ts-node": "^10.9.2",

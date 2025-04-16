@@ -34,6 +34,43 @@ const results = await client.search.search('bitcoin');
 console.log(`Found ${results.tokens.length} tokens`);
 ```
 
+## Advanced Configuration
+
+The SDK supports automatic retry with exponential backoff and response caching, both enabled by default:
+
+```javascript
+import { DexPaprikaClient } from 'dexpaprika-sdk';
+
+// Custom configuration
+const client = new DexPaprikaClient(
+  'https://api.dexpaprika.com', // Default API URL
+  {}, // Axios options (optional)
+  {
+    // Retry configuration (optional)
+    retry: {
+      maxRetries: 4,              // Maximum retry attempts
+      delaySequenceMs: [100, 500, 1000, 5000], // Specific delay for each retry (in ms)
+      retryableStatuses: [408, 429, 500, 502, 503, 504] // HTTP statuses to retry
+    },
+    // Cache configuration (optional)
+    cache: {
+      ttl: 5 * 60 * 1000,         // Time-to-live: 5 minutes
+      maxSize: 1000,              // Maximum cache entries
+      enabled: true               // Enable/disable caching
+    }
+  }
+);
+
+// Working with cache
+const firstCall = await client.networks.list(); // Hits API
+const secondCall = await client.networks.list(); // Uses cache
+
+// Manual cache operations
+client.clearCache();             // Clear all cached data
+console.log(client.cacheSize);   // Get current cache size
+client.setCacheEnabled(false);   // Temporarily disable caching
+```
+
 ## API Reference
 
 For detailed API documentation, visit [docs.dexpaprika.com](https://docs.dexpaprika.com)
@@ -148,6 +185,28 @@ console.log(formatVolume(1234567));  // $1.23M
 console.log(formatPair('ETH', 'USDC')); // ETH/USDC
 ```
 
+## Retry & Caching
+
+You can also use the retry and caching utilities directly:
+
+```js
+import { withRetry, Cache } from 'dexpaprika-sdk';
+
+// Retry a function with custom settings
+const result = await withRetry(
+  async () => {
+    // Your async operation here
+    return await someAsyncFunction();
+  },
+  { maxRetries: 4, delaySequenceMs: [100, 200, 300, 400] }
+);
+
+// Create a standalone cache
+const cache = new Cache({ ttl: 60 * 1000 }); // 1 minute TTL
+cache.set('key', value);
+const cachedValue = cache.get('key');
+```
+
 ## Resources
 
 - [Official Documentation](https://docs.dexpaprika.com) - Comprehensive API reference
@@ -162,6 +221,33 @@ MIT
 ## Contributing
 
 Contributions are welcome! Please read our [contributing guidelines](https://github.com/coinpaprika/dexpaprika-sdk-js/blob/main/CONTRIBUTING.md) before submitting a Pull Request.
+
+## Development and Testing
+
+The SDK includes a comprehensive test suite to verify functionality:
+
+```bash
+# Run basic functionality tests
+npm test
+
+# Run retry and cache verification tests
+npm run verify
+
+# Run real-world API tests
+npm run verify:real
+
+# Run token model tests
+npx ts-node tests/test-token-summary.ts
+
+# Run all tests sequentially
+npm run test:all
+```
+
+All test files are located in the `tests/` directory:
+- `test-after-fixes.ts` - Basic API functionality tests
+- `test-retry-cache.ts` - Dedicated retry and cache mechanism tests
+- `test-real-world.ts` - Tests with actual API calls and simulated failures
+- `test-token-summary.ts` - Token model-specific tests
 
 ## Support
 

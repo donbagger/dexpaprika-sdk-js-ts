@@ -1,5 +1,5 @@
 // DexPaprika SDK exports
-export { DexPaprikaClient } from './client';
+export { DexPaprikaClient, ClientConfig } from './client';
 
 // API service exports
 export { NetworksAPI } from './api/networks';
@@ -16,4 +16,8 @@ export * from './models/networks';
 export * from './models/pools';
 export * from './models/search';
 export * from './models/tokens';
-export * from './models/utils'; 
+export * from './models/utils';
+
+// Utility exports
+export { RetryConfig, defaultRetryConfig, withRetry } from './utils/helpers';
+export { Cache, CacheConfig, defaultCacheConfig } from './utils/cache'; 
