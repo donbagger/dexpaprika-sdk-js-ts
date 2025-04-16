@@ -2,6 +2,21 @@
 
 All notable changes to the DexPaprika SDK will be documented in this file.
 
+## [1.2.0] - 2025-04-20
+
+### Added
+- Automatic retry with exponential backoff for failed requests
+- Response caching system to reduce API traffic and improve performance
+- New client configuration options for customizing retry and cache behavior
+- Cache control methods: clearCache(), setCacheEnabled(), cacheSize property
+- New example demonstrating retry and caching features
+- Comprehensive documentation for new features
+
+### Changed
+- Updated client constructor to accept configuration for retry and cache
+- Improved error handling with network failure resilience
+- Exported utility types and functions for retry and cache mechanisms
+
 ## [1.1.0] - 2025-04-15
 
 ### Added
