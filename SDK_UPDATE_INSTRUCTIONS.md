@@ -315,7 +315,63 @@ protected async _get<T>(endpoint: string, params?: Record<string, any>): Promise
 }
 ```
 
-## 8. Testing Approach
+## 8. Retry and Caching Mechanisms
+
+The SDK includes built-in retry and caching functionality to improve reliability and performance. When updating the SDK, it's important to ensure these mechanisms continue to work correctly.
+
+### Retry Mechanism
+
+The retry mechanism (implemented in `src/utils/helpers.ts`) automatically retries failed API requests based on specific HTTP status codes.
+
+```typescript
+// Default retry configuration
+export const defaultRetryConfig: RetryConfig = {
+  maxRetries: 4,
+  delaySequenceMs: [100, 500, 1000, 5000],  // Explicit delay sequence
+  retryableStatuses: [408, 429, 500, 502, 503, 504]
+};
+```
+
+When updating:
+- Preserve the retry mechanism in client requests
+- Ensure any new endpoints utilize the retry functionality
+- Update retryable status codes if API behavior changes
+- Test the retry functionality with simulated failures
+
+### Caching Mechanism
+
+The caching system (implemented in `src/utils/cache.ts`) stores API responses to improve performance for repeated requests.
+
+```typescript
+// Default cache configuration
+export const defaultCacheConfig: CacheConfig = {
+  ttl: 5 * 60 * 1000, // 5 minutes default
+  maxSize: 1000,      // Default max size
+  enabled: true       // Enabled by default
+};
+```
+
+Key considerations:
+- All GET requests use caching by default
+- POST requests bypass the cache
+- The client allows enabling/disabling caching and clearing the cache
+- Cache keys are generated based on endpoints and parameters
+
+When implementing new endpoints, ensure they properly utilize the caching mechanism where appropriate. Not all endpoints should be cached (e.g., those with frequently changing data may need shorter TTL or no caching).
+
+### Testing Retry and Caching
+
+The SDK includes dedicated tests for these features in `tests/test-retry-cache.ts` and real-world scenarios in `tests/test-real-world.ts`. When making updates, run these tests to verify continued functionality:
+
+```bash
+# Test retry and caching mechanisms
+npm run verify
+
+# Test with real API calls
+npm run verify:real
+```
+
+## 9. Testing Approach
 
 ### Test New and Modified Endpoints
 Create or update tests for any changed endpoints to verify functionality.
@@ -356,7 +412,7 @@ npx ts-node test-new-endpoint.ts
 npm test
 ```
 
-## 9. Documentation Updates
+## 10. Documentation Updates
 
 ### Update JSDoc Comments
 Ensure all new methods and interfaces have proper JSDoc comments:
@@ -396,7 +452,7 @@ npm run docs
 ### Update README.md
 Add examples of new functionality to the README.md file.
 
-## 10. End-to-End Example: Implementing a New Endpoint
+## 11. End-to-End Example: Implementing a New Endpoint
 
 Let's walk through implementing a new endpoint that retrieves advanced analytics for a token:
 
@@ -514,7 +570,7 @@ console.log(`Top trading pairs: ${analytics.top_pairs.length}`);
 ```
 ```
 
-## 11. Decision Criteria: New Files vs. Updating Existing Ones
+## 12. Decision Criteria: New Files vs. Updating Existing Ones
 
 ### Create New Files When:
 - Implementing a completely new resource area (e.g., new `governance.ts` for governance endpoints)
@@ -531,7 +587,7 @@ console.log(`Top trading pairs: ${analytics.top_pairs.length}`);
 2. Assessment: This relates to tokens, which already have a model file and API file
 3. Decision: Update existing `tokens.ts` files rather than creating new ones
 
-## 12. NPM Package Versioning Guidelines
+## 13. NPM Package Versioning Guidelines
 
 ### Semantic Versioning Rules
 Follow [Semantic Versioning](https://semver.org/) (MAJOR.MINOR.PATCH):
@@ -553,7 +609,7 @@ npm version minor
 npm publish
 ```
 
-## 13. Build Process Updates
+## 14. Build Process Updates
 
 When adding new features that require changes to the build process:
 
@@ -592,7 +648,7 @@ If needed, add new scripts to package.json:
 }
 ```
 
-## 14. Weekly Update Checklist
+## 15. Weekly Update Checklist
 
 ### Pre-Update Checks
 - [ ] Verify current build is passing (`npm run build`)
@@ -611,6 +667,8 @@ If needed, add new scripts to package.json:
 - [ ] Create tests for new functionality
 - [ ] Run all tests to verify changes (`npm test`)
 - [ ] Test example files with the updated SDK
+- [ ] Verify retry and caching functionality (`npm run verify`)
+- [ ] Test with real API calls (`npm run verify:real`)
 
 ### Documentation
 - [ ] Update JSDoc comments for new/modified methods

@@ -23,6 +23,7 @@ coverage/
 #OpenAPI
 openapi_old.yml
 openapi_new.yml
+SDK_UPDATE_INSTRUCTIONS.md
 
 # Misc
 .env
