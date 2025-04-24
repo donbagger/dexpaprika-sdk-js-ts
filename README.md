@@ -26,12 +26,65 @@ const networks = await client.networks.list();
 console.log(networks);
 
 // Get top pools on Ethereum
-const pools = await client.pools.listByNetwork('ethereum', 0, 10);
+const pools = await client.pools.listByNetwork('ethereum', {
+  page: 0,
+  limit: 10
+});
 console.log(pools.pools);
 
 // Search for tokens
 const results = await client.search.search('bitcoin');
 console.log(`Found ${results.tokens.length} tokens`);
+```
+
+## Options Pattern API
+
+The DexPaprika SDK uses an options pattern for API method parameters, which provides better flexibility, readability, and extensibility:
+
+```javascript
+import { DexPaprikaClient } from 'dexpaprika-sdk';
+
+const client = new DexPaprikaClient();
+
+// Get top pools with pagination and sorting
+const pools = await client.pools.listByNetwork('ethereum', {
+  page: 0,
+  limit: 10,
+  sort: 'desc',
+  orderBy: 'volume_usd'
+});
+
+// Get pool details with options
+const poolDetails = await client.pools.getDetails(
+  'ethereum', 
+  '0x88e6a0c2ddd26feeb64f039a2c41296fcb3f5640',
+  { inversed: false }
+);
+
+// Get token pools with additional filters
+const tokenPools = await client.tokens.getPools(
+  'ethereum',
+  '0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2', // WETH
+  {
+    limit: 5, 
+    sort: 'desc', 
+    orderBy: 'volume_usd',
+    pairWith: '0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48' // Filter for USDC pairs
+  }
+);
+
+// Get OHLCV data with options
+const ohlcv = await client.pools.getOHLCV(
+  'ethereum',
+  '0x88e6a0c2ddd26feeb64f039a2c41296fcb3f5640',
+  {
+    start: '2023-01-01',
+    end: '2023-01-07',
+    limit: 7,
+    interval: '24h',
+    inversed: false
+  }
+);
 ```
 
 ## Advanced Configuration
@@ -82,20 +135,34 @@ For detailed API documentation, visit [docs.dexpaprika.com](https://docs.dexpapr
 const networks = await client.networks.list();
 
 // DEXes on a network
-const dexes = await client.dexes.listByNetwork('ethereum');
+const dexes = await client.dexes.listByNetwork('ethereum', {
+  limit: 10
+});
 ```
 
 ### Pools & Transactions
 
 ```js
 // Top pools with pagination
-const topPools = await client.pools.list(0, 10, 'desc', 'volume_usd');
+const topPools = await client.pools.list({
+  page: 0,
+  limit: 10,
+  sort: 'desc',
+  orderBy: 'volume_usd'
+});
 
 // Pool details
-const poolDetails = await client.pools.getDetails('ethereum', '0x88e6a0c2ddd26feeb64f039a2c41296fcb3f5640');
+const poolDetails = await client.pools.getDetails(
+  'ethereum',
+  '0x88e6a0c2ddd26feeb64f039a2c41296fcb3f5640'
+);
 
 // Transactions
-const txs = await client.pools.getTransactions('ethereum', '0x88e6a0c2ddd26feeb64f039a2c41296fcb3f5640');
+const txs = await client.pools.getTransactions(
+  'ethereum',
+  '0x88e6a0c2ddd26feeb64f039a2c41296fcb3f5640',
+  { limit: 20 }
+);
 ```
 
 ### OHLCV Data
@@ -104,13 +171,17 @@ For price charts:
 
 ```js
 // Price history (daily candles for a week)
+const startDate = new Date();
+startDate.setDate(startDate.getDate() - 7);
+
 const ohlcv = await client.pools.getOHLCV(
   'ethereum', 
   '0x88e6a0c2ddd26feeb64f039a2c41296fcb3f5640',
-  '2023-01-01', 
-  '2023-01-07',
-  7,
-  '24h'
+  {
+    start: startDate.toISOString(),
+    interval: '24h',
+    limit: 7
+  }
 );
 ```
 
@@ -127,8 +198,13 @@ const token = await client.tokens.getDetails(
 const pools = await client.tokens.getPools(
   'ethereum', 
   '0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2', // WETH
-  0, 10, 'desc', 'volume_usd',
-  '0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48' // USDC
+  {
+    page: 0,
+    limit: 10,
+    sort: 'desc',
+    orderBy: 'volume_usd',
+    pairWith: '0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48' // USDC
+  }
 );
 ```
 
@@ -230,14 +306,8 @@ The SDK includes a comprehensive test suite to verify functionality:
 # Run basic functionality tests
 npm test
 
-# Run retry and cache verification tests
-npm run verify
-
 # Run real-world API tests
-npm run verify:real
-
-# Run token model tests
-npx ts-node tests/test-token-summary.ts
+npx ts-node tests/test-real-world.ts
 
 # Run all tests sequentially
 npm run test:all
@@ -245,9 +315,7 @@ npm run test:all
 
 All test files are located in the `tests/` directory:
 - `test-after-fixes.ts` - Basic API functionality tests
-- `test-retry-cache.ts` - Dedicated retry and cache mechanism tests
 - `test-real-world.ts` - Tests with actual API calls and simulated failures
-- `test-token-summary.ts` - Token model-specific tests
 
 ## Support
 

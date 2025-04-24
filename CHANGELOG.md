@@ -2,37 +2,42 @@
 
 All notable changes to the DexPaprika SDK will be documented in this file.
 
-## [1.2.0] - 2025-04-20
+## 1.3.0 (2025-04-24)
 
 ### Added
-- Automatic retry with exponential backoff for failed requests
-- Response caching system to reduce API traffic and improve performance
-- New client configuration options for customizing retry and cache behavior
-- Cache control methods: clearCache(), setCacheEnabled(), cacheSize property
-- New example demonstrating retry and caching features
-- Comprehensive documentation for new features
+- Added new options-based parameter system for all methods
+- Added TypeScript interfaces for all API options in `options.ts`
+- Improved JSDoc documentation for all methods and parameters
+- Exported response and options types from the main package
 
 ### Changed
-- Updated client constructor to accept configuration for retry and cache
-- Improved error handling with network failure resilience
-- Exported utility types and functions for retry and cache mechanisms
+- Methods now accept options objects instead of positional parameters
+  - `pools.list(page, limit, sort, orderBy)` → `pools.list(options)`
+  - `pools.listByNetwork(networkId, page, limit, sort, orderBy)` → `pools.listByNetwork(networkId, options)`
+  - `pools.getOHLCV(...)` → `pools.getOHLCV(networkId, poolAddress, options)`
+  - And other similar methods
+- Default values are now handled more consistently
 
-## [1.1.0] - 2025-04-15
+### Fixed
+- Improved parameter naming consistency across methods
+- Better type safety for API parameters
+
+## 1.1.0 (2025-04-10)
 
 ### Added
-- Support for new Token summary field that includes price, liquidity, and trading metrics
-- Support for new last_updated field in Token model
-- Added test-token-summary.ts file to verify the new fields
-- Created SDK_UPDATE_INSTRUCTIONS.md with comprehensive update guidelines
+- Added support for new API endpoints
+- Improved error handling with specific error types
+- Enhanced type definitions for better TypeScript support
 
-### Changed
-- Updated to OpenAPI spec v3.1.0
-- Updated TokenSummary interface to match the latest API schema
+### Fixed
+- Fixed caching mechanism for better performance
+- Resolved issues with pagination in some endpoints
 
-## [1.0.0] - 2025-04-01
+## 1.0.0 (2025-03)
 
-### Initial Release
-- First public version of the DexPaprika SDK
+### Added
+- Initial release of the DexPaprika SDK
 - Support for all core API endpoints
-- TypeScript types for all API responses
-- Basic examples and documentation 
+- Built-in caching and retry mechanisms
+- TypeScript definitions
+- Comprehensive documentation 
