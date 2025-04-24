@@ -17,6 +17,7 @@ export * from './models/pools';
 export * from './models/search';
 export * from './models/tokens';
 export * from './models/utils';
+export * from './models/options';
 
 // Utility exports
 export { RetryConfig, defaultRetryConfig, withRetry } from './utils/helpers';

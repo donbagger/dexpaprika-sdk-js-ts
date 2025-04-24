@@ -17,11 +17,17 @@ async function main() {
     }
     
     // Check DEXes on Ethereum
-    const dexes = await client.dexes.listByNetwork('ethereum', 0, 5);
+    const dexes = await client.dexes.listByNetwork('ethereum', {
+      page: 0,
+      limit: 5
+    });
     console.log(`Got ${dexes.dexes.length} ETH dexes`);
     
     // Get some top pools
-    const pools = await client.pools.list(0, 3);
+    const pools = await client.pools.list({
+      page: 0,
+      limit: 3
+    });
     console.log(`Got ${pools.pools.length} top pools`);
     
     if (pools.pools.length > 0) {
@@ -39,11 +45,17 @@ async function main() {
         lastWeek.setDate(lastWeek.getDate() - 7);
         const date = lastWeek.toISOString().split('T')[0];
         
-        const history = await client.pools.getOHLCV(pool.chain, pool.id, date, undefined, 3);
+        const history = await client.pools.getOHLCV(pool.chain, pool.id, {
+          start: date,
+          limit: 3
+        });
         console.log(`Got ${history.length} price points`);
         
         // Check transactions
-        const txs = await client.pools.getTransactions(pool.chain, pool.id, 0, 2) as any;
+        const txs = await client.pools.getTransactions(pool.chain, pool.id, {
+          page: 0,
+          limit: 2
+        }) as any;
         console.log(`Got ${txs.transactions?.length || 0} transactions`);
       } catch (err: any) {
         console.log(`Pool detail error: ${err.message || 'Unknown error'}`);
@@ -56,7 +68,10 @@ async function main() {
       const token = await client.tokens.getDetails('ethereum', weth);
       console.log(`WETH details: ${token.name} (${token.symbol})`);
       
-      const wethPools = await client.tokens.getPools('ethereum', weth, 0, 3);
+      const wethPools = await client.tokens.getPools('ethereum', weth, {
+        page: 0,
+        limit: 3
+      });
       console.log(`WETH is in ${wethPools.pools.length} pools`);
     } catch (err: any) {
       console.log(`Token error: ${err.message || 'Unknown error'}`);
