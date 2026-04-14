@@ -77,15 +77,17 @@ export class PoolsAPI extends BaseAPI {
   }
   
   // Get transactions for a pool
-  getTxs(networkId: string, poolAddress: string, page = 0, limit = 10, cursor?: string) {
+  getTxs(networkId: string, poolAddress: string, page = 0, limit = 10, cursor?: string, from?: number, to?: number) {
     let p: Record<string, any> = { page, limit };
     if (cursor) p.cursor = cursor;
-    
+    if (from !== undefined) p.from = from;
+    if (to !== undefined) p.to = to;
+
     return this._get(`/networks/${networkId}/pools/${poolAddress}/transactions`, p);
   }
-  
+
   // Alternative method name for getTransactions
-  getTransactions(networkId: string, poolAddress: string, page = 0, limit = 10, cursor?: string) {
-    return this.getTxs(networkId, poolAddress, page, limit, cursor);
+  getTransactions(networkId: string, poolAddress: string, page = 0, limit = 10, cursor?: string, from?: number, to?: number) {
+    return this.getTxs(networkId, poolAddress, page, limit, cursor, from, to);
   }
 }
